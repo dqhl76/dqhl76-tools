@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export GH_PAGER=cat
+
 RUN_ID="20948622518"
 JOB_NAME="linux / sqllogic / standalone (tpch, 2c, hybrid)"
 
