@@ -10,10 +10,16 @@
 
 ### 配置
 
+**必须保证  `rerun_job.sh`  在对应的仓库下**。 
+
 打开 `rerun_job.sh` 并修改以下变量：
 
 - `RUN_ID`：目标 workflow run ID
 - `JOB_NAME`：目标 job 名称（必须与 GitHub Actions 中显示的名称完全一致）
+
+
+job_name:
+![JOB_NAME](./job_name.png)
 
 ### 使用方法
 
