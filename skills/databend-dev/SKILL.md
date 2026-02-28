@@ -30,19 +30,14 @@ make build
 ### Step 2: Kill Old Processes
 
 ```bash
-kd
+killall -15 databend-query && killall -15 databend-meta
 ```
-
-This is a shell alias for `killall -15 databend-query && killall -15 databend-meta` defined in the user's `~/.zshrc`.
 
 ### Step 3: Clean Old Data
 
 ```bash
-rd
+rm -rf ./.databend
 ```
-
-This is a shell alias for ` rm -rf ~/work/databend/.databend` defined in the user's `~/.zshrc`.
-Must run AFTER killing processes (Step 2), never before.
 
 ### Step 4: Deploy
 
