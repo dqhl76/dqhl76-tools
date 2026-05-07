@@ -49,16 +49,47 @@ def iter_records(profile_path):
                     yield filename, line_no, record
 
 
+def load_query_details(profile_path):
+    details_dir = Path(profile_path).parent / "query-details"
+    mapping = {}
+    if not details_dir.is_dir():
+        return mapping
+    for child in sorted(details_dir.iterdir()):
+        if not child.is_file():
+            continue
+        with child.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                qid = record.get("query_id")
+                if qid:
+                    mapping[qid] = {
+                        "query_text": record.get("query_text", ""),
+                        "query_start_time": record.get("query_start_time", ""),
+                    }
+    return mapping
+
+
 def list_query_ids(profile_path):
+    details = load_query_details(profile_path)
     rows = []
     for filename, line_no, record in iter_records(profile_path):
+        qid = str(record.get("query_id", ""))
+        detail = details.get(qid, {})
         rows.append(
             (
-                str(record.get("query_id", "")),
+                qid,
                 len(record.get("profiles") or []),
-                f"{filename}:{line_no}",
+                detail.get("query_text", ""),
+                detail.get("query_start_time", ""),
             )
         )
+    rows.sort(key=lambda r: r[3])
     return rows
 
 
@@ -662,8 +693,9 @@ def main():
             print("no query profile records found")
             return 1
         width = max(len(row[0]) for row in rows)
-        for query_id, count, source in rows:
-            print(f"{query_id:<{width}}  profiles={count:<4}  {source}")
+        for query_id, count, query_text, start_time in rows:
+            sql_preview = " ".join(query_text.split())[:60]
+            print(f"{query_id:<{width}}  profiles={count:<4}  {sql_preview}")
         return 0
 
     if not args.query_id:
