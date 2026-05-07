@@ -275,14 +275,14 @@ def render_svg(nodes, children, positions, width, height):
 
     for parent_id, child_ids in children.items():
         parent = positions[parent_id]
-        x1 = parent["x"] + NODE_WIDTH / 2
-        y1 = parent["y"] + NODE_HEIGHT
+        px = parent["x"] + NODE_WIDTH / 2
+        py = parent["y"] + NODE_HEIGHT
         for child_id in child_ids:
             child = positions[child_id]
-            x2 = child["x"] + NODE_WIDTH / 2
-            y2 = child["y"]
-            middle_y = (y1 + y2) / 2
-            path = f"M{x1:.1f},{y1:.1f} C{x1:.1f},{middle_y:.1f} {x2:.1f},{middle_y:.1f} {x2:.1f},{y2:.1f}"
+            cx = child["x"] + NODE_WIDTH / 2
+            cy = child["y"]
+            middle_y = (py + cy) / 2
+            path = f"M{cx:.1f},{cy:.1f} C{cx:.1f},{middle_y:.1f} {px:.1f},{middle_y:.1f} {px:.1f},{py:.1f}"
             edge_parts.append(
                 f'<path class="edge" d="{path}" marker-end="url(#arrow)"></path>'
             )
